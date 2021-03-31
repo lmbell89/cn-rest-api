@@ -32,6 +32,25 @@ app.post('/user', async function (req, res) {
     res.status(400).send(error)
   }
 })
+
+app.patch('/user/:id', (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new : true })
+    console.group(user)
+    res.send(user)
+  } catch (error) {
+    res.status(404).send({ message: 'user not found'})
+  }
+})
+
+app.delete('/user/:id', (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id)
+    res.send(user)
+  } catch (error) {
+    res.status(404).send({ message: 'user not found'})
+  }
+})
  
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
