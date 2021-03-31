@@ -1,5 +1,7 @@
+import express from 'express'
+
 require('./db/connection')
-const express = require('express')
+import { User } from './models/User'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -14,7 +16,7 @@ app.get('/health', function (req, res) {
   res.send({message: 'API working'})
 })
 
-app.get('/user', async function (req, res) {
+app.get('/user', async (req, res) => {
   try {
     const allUsers = await User.find({})
     res.send(allUsers)
@@ -23,7 +25,7 @@ app.get('/user', async function (req, res) {
   }
 })
 
-app.post('/user', async function (req, res) {
+app.post('/user', async (req, res) => {
   try {
     const user = new User(req.body)
     const returnedValue = await user.save()
@@ -33,7 +35,7 @@ app.post('/user', async function (req, res) {
   }
 })
 
-app.patch('/user/:id', (req, res) => {
+app.patch('/user/:id', async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, { new : true })
     console.group(user)
@@ -43,7 +45,7 @@ app.patch('/user/:id', (req, res) => {
   }
 })
 
-app.delete('/user/:id', (req, res) => {
+app.delete('/user/:id', async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id)
     res.send(user)
