@@ -52,3 +52,15 @@ exports.deleteUser = async (req, res) => {
     res.status(404).send({ message: 'user not found'})
   }
 }
+
+exports.authenticateUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: "l.m.bell89@gmail.com" })
+    const passwordCorrect = await user.testPassword(req.body.password)
+    if (!passwordCorrect) throw Error ("invalid password")
+    res.send("logged in")
+  } catch (error) {
+    console.log(error)
+    res.status(400).send(error)
+  }
+}
