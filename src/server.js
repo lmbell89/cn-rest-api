@@ -1,7 +1,8 @@
-import express from 'express'
+const express = require('express')
 
 require('./db/connection')
-import { User } from './models/User'
+const { User } = require('./models/User.js')
+const { Post } = require('./models/Post')
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -31,16 +32,23 @@ app.post('/user', async (req, res) => {
     const returnedValue = await user.save()
     res.status(201).send(returnedValue)
   } catch (error) {
+    console.log(error)
     res.status(400).send(error)
   }
 })
 
 app.patch('/user/:id', async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new : true })
-    console.group(user)
-    res.send(user)
+    const user = await User.findById(req.params.id)
+    for (const [key, value] of Object.entries(req.body)) {
+      user[key] = value
+    }
+    console.log(req.body)
+    const newUser = await user.save()    
+    console.log(newUser)
+    res.send(newUser)
   } catch (error) {
+    console.log(error)
     res.status(404).send({ message: 'user not found'})
   }
 })
@@ -51,6 +59,39 @@ app.delete('/user/:id', async (req, res) => {
     res.send(user)
   } catch (error) {
     res.status(404).send({ message: 'user not found'})
+  }
+})
+
+
+app.get('/posts', async (req, res) => {
+  try {
+    const posts = await Post.find({})
+    res.send(posts)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+})
+
+app.get('/posts/:user_id', async (req, res) => {
+  try {
+    const posts = await Post.find({ author: requestAnimationFrame.params.user_id })
+    res.send(posts)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send(error)
+  }
+})
+
+app.post('/posts/:user_id', async (req, res) => {
+  try {
+    const post = new Post(req.body)
+    post.author = req.params.user_id
+    const returnedValue = await post.save()
+    res.send(returnedValue)
+  } catch (error) {
+    console.log(error)
+    res.status(400).send(error)
   }
 })
  

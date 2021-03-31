@@ -1,11 +1,11 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
-import validator from 'validator'
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+const validator = require('validator')
 
-const Schema = mongoose.SchemaType
+const Schema = mongoose.Schema
 const SALT_WORK_FACTOR = 10
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -24,8 +24,8 @@ const userSchema = new Schema({
   }
 })
 
-UserSchema.pre('save', async function (next) {
-  if (!user.isModified('password')) return next()
+UserSchema.pre(['save'], async function (next) {
+  if (!this.isModified('password')) return next()
 
   try {
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR)
@@ -40,7 +40,7 @@ UserSchema.methods.comparePassword = async function(password) {
   return bcrypt.compare(password, this.password)
 }
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', UserSchema)
 
 module.exports = {
   User
