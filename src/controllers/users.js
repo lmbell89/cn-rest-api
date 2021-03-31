@@ -9,6 +9,16 @@ exports.getAllUsers = async (req, res) => {
   }
 }
 
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+    res.send(user)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send(error)
+  }
+}
+
 exports.addUser = async (req, res) => {
   try {
     const user = new User(req.body)

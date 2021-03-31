@@ -17,4 +17,4 @@ postRouter.delete('/posts/:id', deletePost)
 
 module.exports = {
   postRouter
-}
+} 

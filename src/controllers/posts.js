@@ -44,7 +44,7 @@ exports.updatePost = async (req, res) => {
 
 exports.deletePost = async (req, res) => {
   try {
-    const post = await findByIdAndDelete(req.params.id)
+    const post = await Post.findByIdAndDelete(req.params.id)
     res.send(post)
   } catch (error) {
     console.log(error)
