@@ -2,7 +2,7 @@ const { Comment } = require('../models/Comment')
 
 exports.getPostComments = async (req, res) => {
   try {
-    const comments = await Comment.find({ post: req.body.postId })
+    const comments = await Comment.find({ post: req.params.id })
     res.send(comments)
   } catch (error) {
     console.log(error)
@@ -33,7 +33,7 @@ exports.updateComment = async (req, res) => {
 
 exports.deleteComment = async (req, res) => {
   try {
-    const post = await Post.findByIdAndDelete(req.params.id)
+    const post = await Comment.findByIdAndDelete(req.params.id)
     res.send(post)
   } catch (error) {
     console.log(error)

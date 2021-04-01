@@ -4,14 +4,14 @@ const Schema = mongoose.Schema
 
 const PostSchema = new Schema(
   {
-  content: {
-    type: String,
-    required: true
-  },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true
-  },
+    content: {
+      type: String,
+      required: true
+    },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    }
   },
   { timestamps: true }
 )
