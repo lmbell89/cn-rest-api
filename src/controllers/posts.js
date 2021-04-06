@@ -15,7 +15,7 @@ exports.getAllPosts = async (req, res) => {
 exports.getPostsByUser = async (req, res) => {
   try {
     const posts = await Post.find({ author: req.params.user_id })
-      .skip((req.body.page - 1) * 10)
+      .skip((req.query.page - 1) * 10)
       .limit(10)
     res.send(posts)
   } catch (error) {
