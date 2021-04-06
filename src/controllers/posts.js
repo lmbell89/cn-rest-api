@@ -1,9 +1,10 @@
 const { Post } = require('../models/Post')
 
 exports.getAllPosts = async (req, res) => {
+
   try {
     const allPosts = await Post.find({})
-      .skip((req.body.page - 1) * 10)
+      .skip((req.query.page - 1) * 10)
       .limit(10)
     res.send(allPosts)
   } catch (error) {
