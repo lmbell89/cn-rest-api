@@ -3,6 +3,8 @@ const { Comment } = require('../models/Comment')
 exports.getPostComments = async (req, res) => {
   try {
     const comments = await Comment.find({ post: req.params.id })
+      .skip((req.body.page - 1) * 10)
+      .limit(10)
     res.send(comments)
   } catch (error) {
     console.log(error)

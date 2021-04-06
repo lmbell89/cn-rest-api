@@ -3,6 +3,8 @@ const { Post } = require('../models/Post')
 exports.getAllPosts = async (req, res) => {
   try {
     const allPosts = await Post.find({})
+      .skip((req.body.page - 1) * 10)
+      .limit(10)
     res.send(allPosts)
   } catch (error) {
     console.log(error)
@@ -13,6 +15,8 @@ exports.getAllPosts = async (req, res) => {
 exports.getPostsByUser = async (req, res) => {
   try {
     const posts = await Post.find({ author: req.params.user_id })
+      .skip((req.body.page - 1) * 10)
+      .limit(10)
     res.send(posts)
   } catch (error) {
     console.log(error)
