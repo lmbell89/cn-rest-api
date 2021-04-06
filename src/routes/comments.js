@@ -1,6 +1,5 @@
 const { Router } = require("express")
 const { 
-  getPostComments, 
   addComment, 
   updateComment, 
   deleteComment
@@ -8,7 +7,6 @@ const {
 
 const commentRouter = Router()
 
-commentRouter.get('/comment/:id', getPostComments)
 commentRouter.post('/comment', addComment)
 commentRouter.patch('/comment/:id', updateComment)
 commentRouter.delete('/comment/:id', deleteComment)

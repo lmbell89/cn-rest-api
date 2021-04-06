@@ -1,21 +1,10 @@
-const { Comment } = require('../models/Comment')
-
-exports.getPostComments = async (req, res) => {
-  try {
-    const comments = await Comment.find({ post: req.params.id })
-      .skip((req.body.page - 1) * 10)
-      .limit(10)
-    res.send(comments)
-  } catch (error) {
-    console.log(error)
-    res.status(404).send(error)
-  }
-}
+const { Post } = require('../models/Post')
 
 exports.addComment = async (req, res) => {
   try {
-    const comment = new Comment(req.body)
-    const returnedValue = await comment.save()
+    const post = await Post.findById(req.body.post)
+    post.comments.push(req.body)
+    const returnedValue = await post.save()
     res.send(returnedValue)
   } catch (error) {
     console.log(error)
@@ -25,8 +14,10 @@ exports.addComment = async (req, res) => {
 
 exports.updateComment = async (req, res) => {
   try {
-    const comment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    res.send(comment)
+    const post = await Post.findById(req.body.post)
+    post.comments.id(req.params.id).content = req.body.content
+    await post.save()
+    res.send(post.comments.id(req.params.id))
   } catch (error) {
     console.log(error)
     res.status(400).send(error)
@@ -35,8 +26,11 @@ exports.updateComment = async (req, res) => {
 
 exports.deleteComment = async (req, res) => {
   try {
-    const post = await Comment.findByIdAndDelete(req.params.id)
-    res.send(post)
+    const post = await Post.findById(req.body.post)
+    const comment = post.comments.id(req.params.id)
+    await comment.remove()
+    await post.save()
+    res.send(comment)
   } catch (error) {
     console.log(error)
     res.status(404).send(error)

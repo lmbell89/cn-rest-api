@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const PostSchema = new Schema(
+const CommentScheme = new Schema(
   {
     content: {
       type: String,
@@ -12,6 +12,21 @@ const PostSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true
     }
+  },
+  { timestamps: true }
+)
+
+const PostSchema = new Schema(
+  {
+    content: {
+      type: String,
+      required: true
+    },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    },
+    comments: [CommentScheme]
   },
   { timestamps: true }
 )

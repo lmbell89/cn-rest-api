@@ -8,9 +8,9 @@ require('../db/connection')
 const words = require('./words.json')
 const { User } = require('../models/User')
 const { Post } = require('../models/Post')
-const { Comment } = require('../models/Comment')
 
 const SEED_LENGTH = 6
+const COMMENT_THRESHOLD = 0.2
 deepai.setApiKey(process.env.DEEPAI_KEY)
 
 const selectRandom = (arr) => {
@@ -30,18 +30,23 @@ const makePost = async (users) => {
 
   const content = await generateText(seedText)
   const author = selectRandom(users)._id
-  const post = new Post({ content, author })
+  const comments = []
+
+  let random = Math.random()
+  while (random > COMMENT_THRESHOLD) {
+    comments.push( await makeComment(users, content) )
+    random *= Math.random()
+  }
+
+  const post = new Post({ content, author, comments })
   post.save()
 }
 
-const makeComment = async (users, posts) => {
-  const post = selectRandom(posts)
-  const seedText = post.content.split(" ").slice(0, SEED_LENGTH).join(" ")
+const makeComment = async (users, postContent) => {
+  const seedText = postContent.split(" ").slice(0, SEED_LENGTH).join(" ")
   const content = await generateText(seedText)
   const author = selectRandom(users)._id
-  const comment = new Comment({ content, author })
-  comment.post = post._id
-  comment.save()
+  return { content, author }
 }
 
 const makeUser = async () => {
@@ -59,16 +64,9 @@ const makeUser = async () => {
   await user.save()
 }
 
-const flushDb = async () => {
-  await User.deleteMany({})
-  await Post.deleteMany({})
-  await Comment.deleteMany({})
-}
-
 const populateDb = async () => {
   const USER_COUNT = 20
   const POST_COUNT = 20
-  const COMMENT_COUNT = 20
 
   for (let i = 0; i < USER_COUNT; i++) {
     await makeUser()
@@ -79,13 +77,6 @@ const populateDb = async () => {
   for (let i = 0; i < POST_COUNT; i++) {
     await makePost(users)
   }
-
-  const posts = await Post.find({})
-
-  for (let i = 0; i < COMMENT_COUNT; i++) {
-    await makeComment(users, posts)
-  }
-
   console.log("done!")
 }
 
