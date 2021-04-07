@@ -39,6 +39,20 @@ UserSchema.pre(['save'], async function (next) {
   }
 })
 
+UserSchema.statics.findAndAuthenticate = async function (email, password) {
+  const user = await User.findOne({ email: email })
+  if (!user) {
+    throw new Error("User not found")
+  }
+
+  const valid = await bcrypt.compare(password, user.password)
+  if (!valid) {
+    throw new Error ("Invalid password")
+  }
+
+  return user
+}
+
 UserSchema.methods.testPassword = async function(password) {
   return bcrypt.compare(password, this.password)
 }
