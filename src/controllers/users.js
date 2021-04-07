@@ -5,7 +5,7 @@ exports.getAllUsers = async (req, res) => {
     const allUsers = await User.find({})
     res.send(allUsers)
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).send(error.message)
   }
 }
 
@@ -15,7 +15,7 @@ exports.getUserById = async (req, res) => {
     res.send(user)
   } catch (error) {
     console.log(error)
-    res.status(404).send(error)
+    res.status(404).send(error.message)
   }
 }
 
@@ -26,7 +26,8 @@ exports.addUser = async (req, res) => {
     res.status(201).send(returnedValue)
   } catch (error) {
     console.log(error)
-    res.status(400).send(error)
+    const message = error.code === 11000 ? "Email already exists" : error.message
+    res.status(400).send(message)
   }
 }
 
@@ -40,7 +41,7 @@ exports.updateUser = async (req, res) => {
     res.send(returnedValue)
   } catch (error) {
     console.log(error)
-    res.status(404).send({ message: 'user not found'})
+    res.status(404).send(error.message)
   }
 }
 
@@ -49,6 +50,6 @@ exports.deleteUser = async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id)
     res.send(user)
   } catch (error) {
-    res.status(404).send({ message: 'user not found'})
+    res.status(404).send(error.message)
   }
 }

@@ -9,7 +9,7 @@ exports.getAllPosts = async (req, res) => {
     res.send(allPosts)
   } catch (error) {
     console.log(error)
-    res.status(500).send(error)
+    res.status(500).send(error.message)
   }
 }
 
@@ -21,7 +21,7 @@ exports.getPostsByUser = async (req, res) => {
     res.send(posts)
   } catch (error) {
     console.log(error)
-    res.status(404).send(error)
+    res.status(404).send(error.message)
   }
 }
 
@@ -33,7 +33,7 @@ exports.addPost = async (req, res) => {
     res.send(returnedValue)
   } catch (error) {
     console.log(error)
-    res.status(400).send(error)
+    res.status(400).send(error.message)
   }
 }
 
@@ -43,7 +43,7 @@ exports.updatePost = async (req, res) => {
     res.send(post)
   } catch (error) {
     console.log(error)
-    res.status(400).send(error)
+    res.status(400).send(error.message)
   }
 }
 
@@ -53,6 +53,6 @@ exports.deletePost = async (req, res) => {
     res.send(post)
   } catch (error) {
     console.log(error)
-    res.status(404).send(error)
+    res.status(404).send(error.message)
   }
 }

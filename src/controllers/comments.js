@@ -8,7 +8,7 @@ exports.addComment = async (req, res) => {
     res.send(returnedValue)
   } catch (error) {
     console.log(error)
-    res.status(400).send(error)
+    res.status(400).send(error.message)
   }
 }
 
@@ -20,7 +20,7 @@ exports.updateComment = async (req, res) => {
     res.send(post.comments.id(req.params.id))
   } catch (error) {
     console.log(error)
-    res.status(400).send(error)
+    res.status(400).send(error.message)
   }
 }
 
@@ -33,6 +33,6 @@ exports.deleteComment = async (req, res) => {
     res.send(comment)
   } catch (error) {
     console.log(error)
-    res.status(404).send(error)
+    res.status(404).send(error.message)
   }
 }

@@ -7,10 +7,10 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body
     const user = await User.findAndAuthenticate(email, password)
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expires: "1 week" })
     res.send(token)
   } catch (error) {
     console.log(error)
-    res.status(400).send(error)
+    res.status(400).send(error.message)
   }
 }
