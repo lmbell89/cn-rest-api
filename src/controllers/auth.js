@@ -5,7 +5,8 @@ const { User } = require('../models/User')
 
 exports.login = async (req, res) => {
   try {
-    const user = await User.findAndAuthenticate({ email: req.body.email })
+    const { email, password } = req.body
+    const user = await User.findAndAuthenticate(email, password)
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
     res.send(token)
   } catch (error) {
