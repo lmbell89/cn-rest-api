@@ -5,10 +5,10 @@ exports.auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "")
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    await User.findById(decoded.sub)
+    req.user = await User.findById(decoded.sub)
 
-    if (!user) {
-      throw new Error ("Account not found")
+    if (!req.user) {
+      throw new Error("Account not found")
     }
 
     next()
