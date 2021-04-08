@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
+const jwt = require('jsonwebtoken')
 
 const Schema = mongoose.Schema
 const SALT_WORK_FACTOR = 10
@@ -56,6 +57,14 @@ UserSchema.statics.findAndAuthenticate = async function (email, password) {
 
 UserSchema.methods.testPassword = async function(password) {
   return bcrypt.compare(password, this.password)
+}
+
+UserSchema.methods.generateAuthToken = function() {
+  return jwt.sign(
+    { sub: this._id }, 
+    process.env.JWT_SECRET, 
+    { expiresIn: "1 week" }
+  )
 }
 
 const User = mongoose.model('User', UserSchema)

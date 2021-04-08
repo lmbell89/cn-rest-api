@@ -7,14 +7,15 @@ const {
   deleteUser,
   authenticateUser
 } = require("../controllers/users")
+const { auth } = require('../middleware')
 
 const userRouter = Router()
 
 userRouter.get('/user', getAllUsers)
 userRouter.get('/user/:id', getUserById)
-userRouter.post('/user', addUser)
-userRouter.patch('/user/:id', updateUser)
-userRouter.delete('/user/:id', deleteUser)
+userRouter.post('/user', auth, addUser)
+userRouter.patch('/user/:id', auth, updateUser)
+userRouter.delete('/user/:id', auth, deleteUser)
 
 module.exports = {
   userRouter

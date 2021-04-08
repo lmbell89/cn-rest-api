@@ -23,7 +23,8 @@ exports.addUser = async (req, res) => {
   try {
     const user = new User(req.body)
     const returnedValue = await user.save()
-    res.status(201).send(returnedValue)
+    const token = user.generateAuthToken()
+    res.status(201).send({ user: returnedValue, token })
   } catch (error) {
     console.log(error)
     const message = error.code === 11000 ? "Email already exists" : error.message
